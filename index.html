@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신성 하이페리온 제국 : 특무수사록</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-color: #0d0d0d;
+            --text-color: #d1d1d1;
+            --accent-red: #8a0303;
+            --card-bg: #1a1a1a;
+            --border-color: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Noto Serif KR', serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            color: var(--accent-red);
+        }
+
+        header {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(13, 13, 13, 0.7), rgba(13, 13, 13, 1)), 
+                        url('https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=2574&auto=format&fit=crop') center/cover;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            max-width: 650px;
+            color: #ccc;
+            margin-top: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+
+        /* 탭 네비게이션 CSS */
+        .tabs-container {
+            max-width: 1200px;
+            margin: -30px auto 0;
+            position: relative;
+            z-index: 10;
+            padding: 0 20px;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .tab-btn {
+            background: #222;
+            color: #aaa;
+            border: 1px solid #444;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .tab-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-red);
+            color: #fff;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 10px rgba(138, 3, 3, 0.5);
+        }
+
+        .tab-content {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--accent-red);
+            padding-bottom: 10px;
+        }
+
+        /* 레이아웃 그리드 */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-red);
+        }
+
+        .card h3 {
+            color: var(--accent-red);
+            border-bottom: 1px dashed #444;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* 타임라인 스타일 */
+        .timeline {
+            list-style: none;
+            padding-left: 10px;
+            border-left: 2px solid var(--accent-red);
+        }
+
+        .timeline li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .timeline li::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            background-color: var(--bg-color);
+            border: 2px solid var(--accent-red);
+            border-radius: 50%;
+        }
+        
+        .year {
+            color: var(--accent-red);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        /* 캐릭터 리스트 UI */
+        .character-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .character-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid transparent;
+            transition: border-left-color 0.3s;
+        }
+
+        .character-item:hover {
+            border-left-color: var(--accent-red);
+        }
+
+        .character-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #444;
+            background-color: #222;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+
+        .character-img:hover {
+            transform: scale(1.1);
+            border-color: var(--accent-red);
+        }
+
+        .character-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .character-name {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .character-desc {
+            font-size: 0.85rem;
+            color: #bbb;
+            line-height: 1.4;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            background-color: #050505;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* 모달(Modal) CSS */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 9999; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border: 3px solid var(--accent-red);
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(138, 3, 3, 0.4);
+            animation: zoomIn 0.3s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-red);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            header h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>신성 하이페리온 제국</h1>
+        <h2 class="highlight">특무수사록</h2>
+        <p>전쟁의 상흔이 남은 구대륙, 그림자 속에 숨어든 이단과 범죄자들을 사냥하라.<br>피와 마력, 그리고 차가운 강철의 다크 판타지 수사극.</p>
+    </header>
+
+    <!-- 탭 버튼 영역 -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'tab-world')">세계관 및 시대상</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-magic')">마력과 아티팩트</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-characters')">등장조직 및 인물</button>
+        </div>
+    </div>
+
+    <!-- [탭 1] 세계관 및 시대상 -->
+    <div id="tab-world" class="tab-content active">
+        <h2 class="section-title">무너져가는 <span class="highlight">영광의 굴레</span></h2>
+        
+        <div class="grid-2">
+            <div class="card">
+                <h3>주요 연표</h3>
+                <ul class="timeline">
+                    <li><span class="year">1543년</span> 신대륙 발견</li>
+                    <li><span class="year">1572년</span> 종교개혁 발발, 종교인들의 신대륙 정착 성공</li>
+                    <li><span class="year">1588년</span> 동해안 중심 최초의 열 개 주(州) 자유연방 건립</li>
+                    <li><span class="year">1592년</span> 구대륙 강국들과의 독립전쟁 승리</li>
+                    <li><span class="year">1651년</span> 구대륙 대전쟁 발발</li>
+                    <li><span class="year">1656년</span> 대전쟁 종전 (하이페리온 제국 승리)</li>
+                    <li><span class="year">1659년 (현재)</span> 선황제 서거, 어린 황제 즉위</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>부패한 황실과 병든 사회</h3>
+                <p>1659년 현재, 실권은 <strong>황후와 그 일족</strong>이 독점하고 있습니다. 황후는 어린 황제에게 거대한 유흥 시설을 제공하여 향락에 빠뜨렸고, 황후 일족은 지나친 사치로 국고를 탕진 중입니다.</p>
+                <p>대전쟁에서 승리했음에도 민생은 파탄 났으며 거리에 부랑자가 넘쳐납니다. 제국을 위해 피 흘린 전직 군인들에 대한 대우는 처참하여, 참전 용 세들이 무장 강도로 전락하는 등 극심한 사회 문제를 앓고 있습니다.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">제국군과 <span class="highlight">사법 체계</span>의 붕괴</h2>
+        
+        <div class="grid-3">
+            <div class="card">
+                <h3>육군과 해군</h3>
+                <p>사관학교는 육군과 해군으로 분리되어 있습니다. <strong>해군</strong>은 독자적인 문화를 형성하며 타군에 무관심합니다.</p>
+                <p><strong>육군</strong>은 대전쟁 승리의 주역이라는 뼈저린 자부심과 보상 심리, 억하심정을 동시에 품고 있습니다. 징병제로 끌려온 일반 사병들의 사기와 기량은 바닥을 쳤고, 자신들을 감사하고 수사하는 헌병단에 대해 극도의 적대감을 표출합니다.</p>
+            </div>
+
+            <div class="card">
+                <h3>치안 불신과 사병화</h3>
+                <p>악화되는 치안 속에 시민의 절반 이상이 군과 헌병을 신뢰하지 않으며, 보복이 두려워 수사에 비협조적입니다.</p>
+                <p>황실은 독자적 무력 행사가 가능한 '근위대'를 굴리고 있으며, 이를 모방한 <strong>귀족들은 고용인으로 위장한 불법 사병을 은밀히 양성</strong> 중입니다.</p>
+            </div>
+
+            <div class="card">
+                <h3>균열이 간 헌병단</h3>
+                <p>육군사관학교 출신 중 지원자들이 헌병단으로 배속됩니다. <strong>특무수사국</strong>은 밀려드는 업무와 극심한 인력난에 시달리고 있으며, 일반 헌병들은 무사안일주의에 빠져 있습니다.</p>
+                <p>특히 지방 헌병은 권력과 유착해 이득을 챙기거나, 빽이 있는 병사들을 우선 편제하는 등 썩어 들어가고 있습니다. 최근 육군 상층부에서 특무수사국의 내부 정보를 빼내려는 정황이 포착되나 물증이 없어 양측의 알력 다툼만 심화되는 실정입니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- [탭 2] 마력과 아티팩트 -->
+    <div id="tab-magic" class="tab-content">
+        <h2 class="section-title">마력과 <span class="highlight">피의 대가</span></h2>
+        
+        <p style="text-align: center; margin-bottom: 40px; color: #aaa; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.8;">
+            ※ 본 세계관은 대규모 마법전보다는 <strong>검, 창, 쇠뇌 등 냉병기를 활용한 대인 전투</strong>가 주를 이루는 <strong>로우 파워(Low-Power) 판타지</strong>입니다. 마법과 유물은 전투의 양상을 뒤집을 만큼 강력하지만, 그만큼 제약이 따르거나 소소한 보조 수단으로 활용됩니다.
+        </p>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3>혈중 마력과 적성</h3>
+                <p>대기 중의 마나는 비활성 상태로 일반적인 인간이 감지할 수 없습니다. 대신 전 인류는 호흡과 식사를 통해 <strong>혈액 속에 마력을 축적</strong>합니다.</p>
+                <p>마법은 전문 교육 이수자만이 다룰 수 있으며, 극소수의 천재를 제외하면 보통 1~2개의 속성에만 적성을 가집니다.</p>
+            </div>
+
+            <div class="card">
+                <h3>매개체 : 지팡이</h3>
+                <p>자연 발생한 '마력 결정'을 가공하여 특정 속성을 농축한 무기. 일정량 이상의 혈중 마력을 지닌 자의 피를 주입하여 귀속시킵니다.</p>
+                <ul>
+                    <li><strong>작동 방식:</strong> 공기 중의 마력을 엮어 불씨를 피우거나 가벼운 미풍을 일으키는 등의 <strong>'미력한 마법 현상'</strong>은 대가 없이 일으킬 수 있습니다. 하지만 전투에 쓰일 법한 <strong>강력한 마법(큰 기술)을 발동하기 위해서는 반드시 사용자의 피(혈액)를 대가로 소모</strong>해야 합니다.</li>
+                    <li><strong>한도:</strong> 출혈과 육체적 피로도로 인해, 큰 기술은 일반 사용자 기준 하루 1~3회, 고수조차 4~6회 발동이 한계입니다.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 800px; margin: 40px auto 0;">
+            <h3 style="text-align: center;">고대 유물 : 아티팩트</h3>
+            <p style="text-align: center;">고대의 무작위 마법이 부여된 유물로, 지팡이와 달리 다양한 형태와 고유의 기능을 가집니다.</p>
+            <ul style="margin-top: 20px;">
+                <li><strong>제약 밎 페널티:</strong> 아티팩트가 지닌 <strong>능력의 강력함에 비례하여</strong> 육체적 피로나 환각 등 치명적인 부작용(페널티)이 뒤따릅니다. 반대로 <strong>소소하고 미약한 능력을 지닌 아티팩트는 리스크가 매우 작거나 아예 없는 경우</strong>도 존재합니다.</li>
+                <li><strong>마력 혼선:</strong> 좁은 구역 내에 5개 이상의 아티팩트가 밀집할 경우, 마력 파장이 뒤엉키며 심각한 기능 저하 및 폭주가 발생합니다. 수사국 제4팀은 이를 역이용하여 불법 무장 단체를 제압하기도 합니다.</li>
+            </ul>
+
+            <h4 style="margin-top: 30px; border-bottom: 1px dashed #444; padding-bottom: 10px; color: #ddd;">[예시] 로우 파워 보조형 아티팩트</h4>
+            <ul style="list-style-type: square; color: #bbb; font-size: 0.95rem; line-height: 1.8;">
+                <li><strong>침묵의 숫돌:</strong> 이 숫돌로 날을 벼린 냉병기는 휘두를 때 바람을 가르는 파공음이 나지 않습니다. (페널티: 없음)</li>
+                <li><strong>맥박 동전:</strong> 동전을 쥔 상대방의 심박수가 비정상적으로 높아지면 미세한 진동을 일으켜 거짓말 탐지를 돕습니다. (페널티: 사용자의 손바닥에 가벼운 저림 발생)</li>
+                <li><strong>야간 경비병의 랜턴:</strong> 기름이나 불씨 없이도 반경 1미터를 간신히 비출 정도의 희미한 빛을 영구적으로 냅니다. (페널티: 없음)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- [탭 3] 등장조직 및 인물 -->
+    <div id="tab-characters" class="tab-content">
+        <h2 class="section-title">심판자 : <span class="highlight">특무수사국</span></h2>
+        <div class="grid-2">
+            <!-- 헌병 1팀 -->
+            <div class="card">
+                <h3>제1팀: 사냥개 (강습/섬멸)</h3>
+                <p style="font-size:0.9rem; color:#aaa;">선 타격, 후 질문. 대규모 거점 타격에 특화된 핏빛 사냥개들.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/k/1.png?raw=true" alt="칼란">
+                        <div class="character-info">
+                            <span class="character-name">칼란 보일 (대위)</span>
+                            <span class="character-desc">팀장. 증오를 품은 대형 해머의 광전사.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/l/1.png?raw=true" alt="마리아">
+                        <div class="character-info">
+                            <span class="character-name">마리아 코프 (중사)</span>
+                            <span class="character-desc">돌격. 빈민가 출신 수석 졸업자.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/m/1.png?raw=true" alt="덩컨">
+                        <div class="character-info">
+                            <span class="character-name">덩컨 베어드 (상사)</span>
+                            <span class="character-desc">제압. 부패를 혐오하는 미늘창의 베테랑.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/n/1.png?raw=true" alt="루카">
+                        <div class="character-info">
+                            <span class="character-name">루카 텐필드 (소위)</span>
+                            <span class="character-desc">지원. 신속 장화를 쓰는 막내.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 헌병 2팀 -->
+            <div class="card">
+                <h3>제2팀: 그림자 (잠입/암살)</h3>
+                <p style="font-size:0.9rem; color:#aaa;">증거 확보 및 요인 암살. 정보를 우선시하는 검은 올빼미.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/o/1.png?raw=true" alt="아리아나">
+                        <div class="character-info">
+                            <span class="character-name">아리아나 베스퍼 (소령)</span>
+                            <span class="character-desc">팀장. 감정을 배제한 완벽주의자.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/p/1.png?raw=true" alt="렌">
+                        <div class="character-info">
+                            <span class="character-name">렌 다크우드 (소위)</span>
+                            <span class="character-desc">잠입. 전향한 암살자 길드 출신.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/q/1.png?raw=true" alt="실크">
+                        <div class="character-info">
+                            <span class="character-name">실크 파론 (중사)</span>
+                            <span class="character-desc">정찰. 환영 브로치를 다루는 분위기 메이커.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/r/1.png?raw=true" alt="타로스">
+                        <div class="character-info">
+                            <span class="character-name">타로스 핀 (하사)</span>
+                            <span class="character-desc">정보. 소형 쇠뇌를 쓰는 신경질적인 시계공.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 헌병 3팀 -->
+            <div class="card">
+                <h3>제3팀: 올가미 (추적/체포)</h3>
+                <p style="font-size:0.9rem; color:#aaa;">현상수배범 추적. 표적을 옭아매는 똬리 튼 뱀.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/v/1.png?raw=true" alt="빅터">
+                        <div class="character-info">
+                            <span class="character-name">빅터 코르보 (소령)</span>
+                            <span class="character-desc">팀장. 사냥꾼의 족쇄를 지닌 냉혹한 추적자.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/w/1.png?raw=true" alt="세라">
+                        <div class="character-info">
+                            <span class="character-name">세라 쏜 (중사)</span>
+                            <span class="character-desc">추적. 군견과 매를 다루는 다혈질 사냥꾼.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/x/1.png?raw=true" alt="레이크">
+                        <div class="character-info">
+                            <span class="character-name">레이크 폴 (중위)</span>
+                            <span class="character-desc">저격. 이성을 담당하는 은발의 사격수.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/y/1.png?raw=true" alt="밀라">
+                        <div class="character-info">
+                            <span class="character-name">밀라 렌 (하사)</span>
+                            <span class="character-desc">지원. 복수심에 불타는 천재 덫사냥꾼.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 헌병 4팀 -->
+            <div class="card">
+                <h3>제4팀: 올빼미 (마도수사)</h3>
+                <p style="font-size:0.9rem; color:#aaa;">마법 수사 및 유물 회수. 마력 혼선을 역이용하는 푸른 불꽃.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/s/1.png?raw=true" alt="이그니스">
+                        <div class="character-info">
+                            <span class="character-name">이그니스 램 (대위)</span>
+                            <span class="character-desc">팀장. 원칙주의적인 수석 마법사.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/t/1.png?raw=true" alt="에드워드">
+                        <div class="character-info">
+                            <span class="character-name">에드워드 핀치 (소위)</span>
+                            <span class="character-desc">수사. 흑마법에 해박한 냉소적 마검사.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/u/1.png?raw=true" alt="가론">
+                        <div class="character-info">
+                            <span class="character-name">가론 스틸 (원사)</span>
+                            <span class="character-desc">추적. 마력 저항 장비를 두른 비마법사 탱커.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/z/1.png?raw=true" alt="클레어">
+                        <div class="character-info">
+                            <span class="character-name">클레어 몬트 (하사)</span>
+                            <span class="character-desc">지원. 유물 해체 전문 천재 학자.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        <h2 class="section-title">국가의 간성 : <span class="highlight">제국 육군</span></h2>
+        <div class="card" style="max-width: 600px; margin: 0 auto 50px;">
+            <h3>제국 육군 최상위 지휘부</h3>
+            <p style="font-size:0.9rem; color:#aaa;">제국의 안보와 굳건한 질서를 수호하는 강경파 군인들.</p>
+            <div class="character-list">
+                <div class="character-item">
+                    <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/a/1.png?raw=true" alt="바리안">
+                    <div class="character-info">
+                        <span class="character-name">바리안 크로우 (중장)</span>
+                        <span class="character-desc">제국의 영광을 이끌었던 위대한 전쟁 영웅.</span>
+                    </div>
+                </div>
+                <div class="character-item">
+                    <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/b/1.png?raw=true" alt="실비아">
+                    <div class="character-info">
+                        <span class="character-name">실비아 (소령)</span>
+                        <span class="character-desc">과묵하고 충성스러운 바리안의 정예 부관.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">그림자 : <span class="highlight">범죄 조직</span></h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>오리진</h3>
+                <p style="font-size:0.9rem; color:#aaa;">불법 마도 병기를 연구하는 엘리트 집단.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/c/1.png?raw=true" alt="이안">
+                        <div class="character-info">
+                            <span class="character-name">이안 랭거스터</span>
+                            <span class="character-desc">지식에 집착하는 표리부동한 수장.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/d/1.png?raw=true" alt="엘라">
+                        <div class="character-info">
+                            <span class="character-name">엘라</span>
+                            <span class="character-desc">유아퇴행적이고 잔혹한 식물 마법사.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>검은 톱니바퀴</h3>
+                <p style="font-size:0.9rem; color:#aaa;">불법 무기를 유통하는 제대 기술자 집단.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/e/1.png?raw=true" alt="바론">
+                        <div class="character-info">
+                            <span class="character-name">바론</span>
+                            <span class="character-desc">의수를 장착한 탐욕적인 기회주의자.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/f/1.png?raw=true" alt="보리스">
+                        <div class="character-info">
+                            <span class="character-name">보리스</span>
+                            <span class="character-desc">회전톱을 휘두르는 거구의 행동대장.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>잿빛 늑대들</h3>
+                <p style="font-size:0.9rem; color:#aaa;">중부 산악지대의 참전용사 무장 강도단.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/g/1.png?raw=true" alt="가레스">
+                        <div class="character-info">
+                            <span class="character-name">가레스</span>
+                            <span class="character-desc">동료애가 강한 참전용사 리더.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/h/1.png?raw=true" alt="리나">
+                        <div class="character-info">
+                            <span class="character-name">리나</span>
+                            <span class="character-desc">대형 쇠뇌를 다루는 냉정한 암살 조장.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>붉은 장막</h3>
+                <p style="font-size:0.9rem; color:#aaa;">고위층과 연계하여 인신매매를 주도하는 비밀 클럽.</p>
+                <div class="character-list">
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/i/1.png?raw=true" alt="로사">
+                        <div class="character-info">
+                            <span class="character-name">로사</span>
+                            <span class="character-desc">교활한 심리 조종과 사교술의 대가.</span>
+                        </div>
+                    </div>
+                    <div class="character-item">
+                        <img class="character-img" src="https://github.com/rayerozeyuri/q/blob/main/j/1.png?raw=true" alt="잭">
+                        <div class="character-info">
+                            <span class="character-name">잭</span>
+                            <span class="character-desc">기괴한 유연성을 지닌 양손 클로 처형인.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>※ 본 페이지는 Dark Fantasy / Investigation RPG 룰 기반의 AI 채팅 시나리오 소개용입니다.</p>
+        <p>&copy; 2024 신성 하이페리온 제국 특무수사록. All Rules Reserved.</p>
+    </footer>
+
+    <!-- 확대 이미지를 보여줄 모달(Modal) 창 -->
+    <div id="imageModal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- 스크립트 (탭 전환 및 모달 기능) -->
+    <script>
+        // 탭 전환 기능
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbtns;
+            
+            // 모든 탭 내용 숨기기
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // 모든 탭 버튼 비활성화
+            tabbtns = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabbtns.length; i++) {
+                tabbtns[i].classList.remove("active");
+            }
+            
+            // 선택된 탭과 버튼 활성화
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            
+            // 탭 클릭 시 화면을 부드럽게 위로 올림
+            window.scrollTo({ top: document.querySelector('.tabs-container').offsetTop - 20, behavior: 'smooth' });
+        }
+
+        // 이미지 모달 기능
+        document.addEventListener("DOMContentLoaded", function() {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            const closeBtn = document.querySelector(".close-btn");
+            const charImgs = document.querySelectorAll(".character-img");
+
+            charImgs.forEach(img => {
+                img.addEventListener("click", function() {
+                    modal.style.display = "flex";
+                    modalImg.src = this.src;
+                });
+            });
+
+            closeBtn.addEventListener("click", function() {
+                modal.style.display = "none";
+            });
+
+            window.addEventListener("click", function(event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
